@@ -1,0 +1,5 @@
+{"prompt_id": "example-001", "task_type": "exact_match", "prompt": "What is 12 + 30?", "reference_answer": "42"}
+{"prompt_id": "example-002", "task_type": "structured_extraction", "prompt": "Extract the name and age from: 'Ada Lovelace, 36 years old.'", "reference_answer": {"name": "Ada Lovelace", "age": 36}}
+{"prompt_id": "example-003", "task_type": "constraint_checking", "prompt": "Write a one-sentence apology that mentions a refund.", "reference_answer": [{"type": "contains", "value": "refund"}, {"type": "max_words", "value": 30}]}
+{"prompt_id": "example-004", "task_type": "code_generation", "prompt": "Write a Python function `add(a, b)` that returns the sum of two numbers.", "reference_answer": {"entry_point": "add", "test_cases": [{"call": "add(1, 2)", "expected": 3}, {"call": "add(-1, 1)", "expected": 0}]}}
+{"prompt_id": "example-005", "task_type": "judge_scored", "prompt": "Write a short, encouraging note to a new engineer on their first day.", "reference_answer": null}

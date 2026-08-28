@@ -1,0 +1,123 @@
+# Pricing configuration. All cost calculations MUST read from this file —
+# never hardcode prices in Python.
+#
+# Source: Anthropic official API pricing docs
+# (https://platform.claude.com/docs/en/about-claude/pricing), re-verified
+# 2026-08-25. This supersedes the prior version of this file, which modeled
+# Claude Sonnet 5's $2/$10 rate as a temporary introductory period expiring
+# 2026-08-31 with a scheduled increase to $3/$15 on 2026-09-01. Anthropic's
+# pricing page now states explicitly: "The $2/$10 per million input/output
+# token pricing for Claude Sonnet 5, announced at launch as introductory
+# pricing through August 31, 2026, is now the standard price. The previously
+# scheduled increase to $3/$15 per million input/output tokens on September
+# 1, 2026 will not occur." The now-cancelled future rate period has been
+# removed below; $2/$10 is Sonnet 5's standard price with no expiration.
+#
+# Cache write/read multipliers (5-minute write 1.25x base input price,
+# 1-hour write 2x, cache read 0.1x) are CONFIRMED (not assumed) for all
+# three Anthropic models below — the same official pricing table lists
+# each model's cache rates explicitly, and they match this convention
+# exactly.
+#
+# openai and google model pricing added 2026-08-25 alongside their
+# adapters (see docs/decisions/ADR-0004-multi-provider-support.md for the
+# full source trail). Cache pricing for both was NOT independently
+# verified this pass and is left null throughout rather than guessed —
+# cost calculation already treats a null rate as "not billed" (see
+# router.cost.calculator), never as zero-because-free.
+
+version: "1"
+currency: USD
+pricing_config_version: "2026-08-25.3"
+
+models:
+  claude-sonnet-5:
+    provider: anthropic
+    rates:
+      - effective_from: "2026-01-01T00:00:00Z"
+        effective_until: null
+        input_per_mtok: 2.00
+        output_per_mtok: 10.00
+        cache_write_5m_per_mtok: 2.50
+        cache_write_1h_per_mtok: 4.00
+        cache_read_per_mtok: 0.20
+
+  claude-opus-5:
+    provider: anthropic
+    rates:
+      - effective_from: "2026-01-01T00:00:00Z"
+        effective_until: null
+        input_per_mtok: 5.00
+        output_per_mtok: 25.00
+        cache_write_5m_per_mtok: 6.25
+        cache_write_1h_per_mtok: 10.00
+        cache_read_per_mtok: 0.50
+
+  claude-haiku-4-5:
+    provider: anthropic
+    rates:
+      - effective_from: "2026-01-01T00:00:00Z"
+        effective_until: null
+        input_per_mtok: 1.00
+        output_per_mtok: 5.00
+        cache_write_5m_per_mtok: 1.25
+        cache_write_1h_per_mtok: 2.00
+        cache_read_per_mtok: 0.10
+
+  # Source: https://developers.openai.com/api/docs/pricing (fetched and
+  # cross-verified twice, verbatim table quote, 2026-08-25). OpenAI's
+  # response.usage.output_tokens_details.reasoning_tokens is a BREAKDOWN of
+  # output_tokens, not additional to it (confirmed via a documented usage
+  # example where input_tokens + output_tokens == total_tokens exactly) --
+  # so reasoning_per_mtok is deliberately left unset here, same as
+  # Anthropic, to avoid billing reasoning tokens twice.
+  gpt-5.6-luna:
+    provider: openai
+    rates:
+      - effective_from: "2026-01-01T00:00:00Z"
+        effective_until: null
+        input_per_mtok: 0.20
+        output_per_mtok: 1.20
+
+  gpt-5.6-sol:
+    provider: openai
+    rates:
+      - effective_from: "2026-01-01T00:00:00Z"
+        effective_until: null
+        input_per_mtok: 4.00
+        output_per_mtok: 20.00
+
+  # Source: https://ai.google.dev/gemini-api/docs/pricing (fetched
+  # 2026-08-25), prices for prompts <=200k tokens. UNLIKE OpenAI, Gemini's
+  # total_thought_tokens is a SEPARATE, additive count from
+  # total_output_tokens (confirmed via Google's own cost guidance: a
+  # response with a small visible answer but heavy internal reasoning
+  # bills for both combined) -- and thinking tokens are billed at the
+  # standard output rate. reasoning_per_mtok is therefore deliberately set
+  # equal to output_per_mtok for both models below, the opposite choice
+  # from OpenAI's entries above. See google_gemini_adapter.py's docstring.
+  gemini-2.5-flash-lite:
+    provider: google
+    rates:
+      - effective_from: "2026-01-01T00:00:00Z"
+        effective_until: null
+        input_per_mtok: 0.10
+        output_per_mtok: 0.40
+        reasoning_per_mtok: 0.40
+
+  gemini-3.1-pro-preview:
+    provider: google
+    rates:
+      - effective_from: "2026-01-01T00:00:00Z"
+        effective_until: null
+        input_per_mtok: 2.00
+        output_per_mtok: 12.00
+        reasoning_per_mtok: 12.00
+
+# Anthropic does not currently expose a separate billed "reasoning/thinking
+# token" usage field distinct from output_tokens — thinking tokens are billed
+# as output tokens. reasoning_per_mtok is therefore intentionally absent for
+# the claude-* models above; the cost calculator reports reasoning_cost=0.0
+# for them rather than inventing a rate. Do not add a reasoning rate for an
+# Anthropic model here without confirming the provider actually bills it
+# separately.

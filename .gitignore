@@ -1,0 +1,30 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.venv/
+venv/
+.env
+.env.local
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Experiment outputs — records may contain response text, keep out of git by default.
+runs/
+data/*
+!data/.gitkeep
+!data/example_dataset.jsonl
+
+# Pilot benchmark: the curated ~200-item JSONL + manifest are real data we
+# commit (see ADR-0003); raw_cache/ holds full upstream source dumps used to
+# build it and is regenerable via scripts/fetch_pilot_raw_sources.py, so it
+# stays out of git.
+!data/benchmarks/
+data/benchmarks/raw_cache/
+
+.vscode/
+.idea/
+*.swp

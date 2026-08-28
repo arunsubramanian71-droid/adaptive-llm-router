@@ -1,0 +1,2022 @@
+{
+  "benchmark_version": "pilot_v1",
+  "created_utc": "2026-08-25T05:44:01.629549+00:00",
+  "random_seed": 1337,
+  "selection_procedure": "Per source: load all items, apply a source-specific eligibility filter (documented per source below), then a single global de-duplication pass across all eligible items (by whitespace/case-normalized prompt text, fixed category+original-item order, first occurrence wins). Then, independently per task category, deterministically shuffle the de-duplicated eligible pool with random.Random(seed) and take the first 40 items. Final file is sorted by prompt_id. This is purely a pilot pool for model-pair screening / quality-separation / stochasticity / cost-quality-headroom analysis -- it is not, and must not be treated as, the held-out test set; no model, delta, k, or router selection may be tuned against it.",
+  "category_targets": {
+    "mathematical_reasoning": 40,
+    "coding": 40,
+    "logical_reasoning": 40,
+    "factual_knowledge": 40,
+    "structured_extraction_constraint_following": 40
+  },
+  "category_counts_selected": {
+    "mathematical_reasoning": 40,
+    "coding": 40,
+    "logical_reasoning": 40,
+    "factual_knowledge": 40,
+    "structured_extraction_constraint_following": 40
+  },
+  "total_selected": 200,
+  "sources": {
+    "gsm8k": {
+      "dataset": "GSM8K",
+      "repo": "openai/grade-school-math",
+      "license": "MIT",
+      "license_source_url": "https://raw.githubusercontent.com/openai/grade-school-math/master/LICENSE",
+      "split": "test"
+    },
+    "humaneval": {
+      "dataset": "HumanEval",
+      "repo": "openai/human-eval",
+      "license": "MIT",
+      "license_source_url": "https://raw.githubusercontent.com/openai/human-eval/master/LICENSE",
+      "split": "test (all 164 problems)"
+    },
+    "big_bench_hard": {
+      "dataset": "BIG-Bench-Hard (BBH)",
+      "repo": "suzgunmirac/BIG-Bench-Hard",
+      "license": "MIT",
+      "license_source_url": "https://raw.githubusercontent.com/suzgunmirac/BIG-Bench-Hard/main/LICENSE",
+      "split": "bbh/{logical_deduction_five_objects,date_understanding,object_counting,causal_judgement,tracking_shuffled_objects_three_objects}.json"
+    },
+    "truthfulqa": {
+      "dataset": "TruthfulQA (MC1)",
+      "repo": "sylinrl/TruthfulQA",
+      "license": "Apache-2.0",
+      "license_source_url": "https://raw.githubusercontent.com/sylinrl/TruthfulQA/master/LICENSE",
+      "split": "data/v0/mc_task.json"
+    },
+    "ifeval": {
+      "dataset": "IFEval",
+      "repo": "google-research/google-research (instruction_following_eval)",
+      "license": "Apache-2.0",
+      "license_source_url": "https://raw.githubusercontent.com/google-research/google-research/master/LICENSE",
+      "split": "instruction_following_eval/data/input_data.jsonl"
+    }
+  },
+  "raw_source_files_sha256": {
+    "bbh_causal_judgement.json": "6e8bca44dd402008ed41c07a3d0a1d5e7b03db7001a7e002fcdf4c60985ea081",
+    "bbh_date_understanding.json": "0148d4ac5fca05b2f82373e5fef7208e15363b9c6079493034d77b3dab496bf5",
+    "bbh_license.txt": "4ef2ff4295d26ab6211235039c132697408cec5391d2c091b41e983771978db8",
+    "bbh_logical_deduction_five_objects.json": "d2df31394b903b7f0e085d42a69572a092987856eac076799017d70ef266fa8f",
+    "bbh_object_counting.json": "8acef14dbbdd40d2326ef7755750b6b5fe919fef06276af1bab3f1c297f022ff",
+    "bbh_tracking_shuffled_objects_three_objects.json": "546cc7bf10c6a01a6a4c17ae28a4966485f21f29fd5d111f37858ec78e354f6b",
+    "google_research_license.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "gsm8k_license.txt": "86bbb73e855821d7c401912fd4bf82e34313e6e3b6fd6f909f2b6cc9e209a53b",
+    "gsm8k_test.jsonl": "3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14",
+    "humaneval.jsonl": "1d49078ba3e2b196b9344535bef34a43021f038fad9561d6ee7c53450609a6a2",
+    "humaneval_license.txt": "bcba3de214851cce46ed5af42d6698044616eeace887c3231bc7a20474ab639e",
+    "ifeval_input.jsonl": "67ffeee0fcb87c317c5b08a2de85557b4a7e96ada6178aa645b4954fe4b53d49",
+    "truthfulqa_license.txt": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "truthfulqa_mc.json": "6eb4125d25750c0145c4be2dce00440736684ab6f74ce6bff2139571cc758954"
+  },
+  "exclusions": [
+    {
+      "source": "ifeval",
+      "original_id": "1000",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1005",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1012",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "102",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1021",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1040",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1075",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1082",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1094",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1098",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1107",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1108",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1122",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1127",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1129",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt', 'keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1130",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1131",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1137",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1139",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1148",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1153",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1154",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1174",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'keywords:letter_frequency', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1180",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1203",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1219",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1233",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1236",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1237",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1242",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1246",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1248",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1259",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1262",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1265",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1268",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "127",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1281",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1286",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1287",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "13",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1300",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1305",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript', 'detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1307",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1314",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1325",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1332",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1342",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'keywords:frequency', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1348",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "136",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1367",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1372",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1375",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1377",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1379",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1381",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1389",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1392",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1393",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1402",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1418",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "142",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "143",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1476",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1477",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1480",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1481",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections', 'detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1498",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1512",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1518",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1535",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1537",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1546",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1548",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1561",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1571",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1582",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses', 'language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1591",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1592",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "16",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1601",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1609",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1619",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1620",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1627",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "163",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1634",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1644",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1646",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1653",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1656",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "167",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1670",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "168",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1686",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1691",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1705",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1713",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1730",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1733",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1739",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1746",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1759",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1773",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "179",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1793",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1800",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "181",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1823",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1825",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1834",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1837",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1845",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1857",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1858",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1879",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1880",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1883",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1886",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1897",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1906",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1908",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'detectable_format:number_bullet_lists', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1922",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1927",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1928",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1934",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1936",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1943",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1944",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1954",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1964",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1967",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1980",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript', 'detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "1996",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "201",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2023",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2035",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2041",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2063",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2070",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2071",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2078",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2084",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2100",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2107",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2118",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2136",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2139",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2142",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2143",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2162",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2164",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2169",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "218",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2180",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2192",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2195",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2215",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2216",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2225",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2230",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2246",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2250",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2253",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2265",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2266",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "227",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2273",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2275",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2284",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2292",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2299",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2303",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2304",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2305",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2309",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2314",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2337",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2350",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2355",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2357",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2359",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2362",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2372",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2380",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2381",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2383",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2386",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2392",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2395",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2396",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "240",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2404",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2416",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2436",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2439",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2447",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2449",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2457",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2464",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2465",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2467",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "247",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2471",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2482",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2497",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "251",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2515",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2549",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript', 'length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2571",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2577",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2583",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2585",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2589",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2590",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2591",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2596",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses', 'language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2605",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2616",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2617",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2622",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2628",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2637",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2649",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2653",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists', 'keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2667",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2674",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2683",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2685",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2704",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2713",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2716",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2724",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2739",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2749",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2752",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2759",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2765",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2768",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2779",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2780",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2785",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2787",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "279",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2790",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2801",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2820",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2832",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2844",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2849",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2853",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2857",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2859",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "286",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2870",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2871",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "288",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2880",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2887",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2889",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2904",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2905",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2908",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2909",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2912",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses', 'keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2918",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "292",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2921",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2925",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2929",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2941",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2943",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "296",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2977",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "2997",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3025",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3035",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3041",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3063",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3069",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript', 'detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3071",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3073",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3089",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3091",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3098",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency', 'detectable_format:number_bullet_lists', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3109",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3112",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3126",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3130",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3131",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3188",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3191",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3195",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency', 'language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "321",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "322",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3221",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3223",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3224",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3241",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3243",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3245",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3256",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3263",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3272",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3276",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3280",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3281",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3287",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3294",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3305",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt', 'language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "331",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3311",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3315",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "332",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3324",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses', 'detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3326",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3327",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3329",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3335",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses', 'language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "334",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3345",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3350",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3351",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3362",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3367",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3369",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3371",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "340",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3407",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3409",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3414",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3415",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3428",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3429",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections', 'length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3434",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3453",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3455",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3456",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3478",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3484",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "349",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3494",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3502",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3505",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3506",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3513",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['change_case:capital_word_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3518",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3534",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3538",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3549",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3557",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_bullet_lists']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3563",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3565",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_paragraphs']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3567",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3569",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "357",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:multiple_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3608",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['keywords:letter_frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3619",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3623",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3624",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:nth_paragraph_first_word']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3629",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3633",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3644",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3653",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3669",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3672",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3680",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections', 'keywords:frequency']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3682",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3691",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "371",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:json_format']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3710",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:postscript', 'detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3718",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3724",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:number_highlighted_sections']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3739",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['length_constraints:number_sentences']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "374",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:repeat_prompt']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3743",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3744",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_content:number_placeholders', 'language:response_language']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3748",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['combination:two_responses']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3749",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3750",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3751",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3752",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3753",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3754",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3755",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3756",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "ifeval",
+      "original_id": "3757",
+      "reason": "uses instruction type(s) not supported by our constraint_checking evaluator: ['detectable_format:constrained_response']"
+    },
+    {
+      "source": "big_bench_hard",
+      "original_id": "104",
+      "reason": "duplicate prompt text (identical, after whitespace/case normalization, to 'bbh-causal_judgement-36')"
+    },
+    {
+      "source": "big_bench_hard",
+      "original_id": "119",
+      "reason": "duplicate prompt text (identical, after whitespace/case normalization, to 'bbh-causal_judgement-32')"
+    }
+  ],
+  "n_exclusions": 389
+}

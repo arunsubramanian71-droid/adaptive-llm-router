@@ -1,0 +1,29 @@
+# EXAMPLE experiment configuration — illustrates the schema in
+# src/router/experiment/config.py and gives the test suite / a future real
+# run something concrete to load. Every model/k/delta value below is a
+# placeholder for exercising the config loader, not a frozen decision —
+# see docs/decisions/ADR-0001 and ADR-0002. Copy this file rather than
+# editing it in place when you set up a real run.
+
+experiment_name: example_pilot_dry_run
+
+dataset_path: data/example_dataset.jsonl
+
+provider: anthropic
+strong_model_id: claude-sonnet-5
+cheap_model_id: claude-haiku-4-5
+
+k: 1          # placeholder — up to k=6 is collected per ADR-0001; not frozen
+delta: 0.4    # placeholder — one of {0.2, 0.4, 0.6} under evaluation; not frozen
+
+router:
+  type: tfidf_logreg
+  hyperparams: {}
+
+calibration_method: platt
+thresholds: null   # null => analysis module's default 0.00-1.00 sweep in steps of 0.05
+bootstrap_n: 2000
+bootstrap_seed: 0
+
+output_dir: runs/example_pilot_dry_run
+seed: 0

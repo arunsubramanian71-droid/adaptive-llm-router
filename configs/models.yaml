@@ -1,0 +1,121 @@
+# Model configuration for Stage 0 experimental infrastructure.
+#
+# IMPORTANT: nothing here is a frozen decision. The final model pair, and the
+# final delta/k values, are explicitly NOT chosen yet (see docs/decisions/).
+# These entries exist only so the provider adapter and cost/storage layers
+# have something concrete to exercise in tests and the tiny verification run.
+#
+# Model IDs and pricing were verified against current Anthropic documentation
+# on 2026-08-25 (see docs/decisions/ADR-0002-stage0-model-assumptions.md).
+# claude-opus-5's entry below was added 2026-08-25 during model-pair pilot
+# preparation, re-verified against the same official pricing docs.
+#
+# The openai and google providers below were added 2026-08-25 to make the
+# router genuinely provider-agnostic (see
+# docs/decisions/ADR-0004-multi-provider-support.md for the full research
+# trail: which official docs were checked, and why these specific models).
+# Like the Anthropic entries, none of this freezes a research pair, k, or
+# delta -- these exist so the provider abstraction and cost/storage layers
+# have real, current, correctly-priced models from three different vendors
+# to exercise.
+
+version: 1
+
+providers:
+  anthropic:
+    adapter: router.models.anthropic_adapter.AnthropicModelClient
+    models:
+      - id: claude-sonnet-5
+        display_name: "Claude Sonnet 5"
+        role_hint: candidate_strong  # provisional label only, not a frozen pair choice
+        max_output_tokens: 4096
+        thinking:
+          type: adaptive
+          display: omitted
+        effort: high
+        temperature: null
+        top_p: null
+        stop_sequences: []
+        inference_geo: null
+
+      - id: claude-opus-5
+        display_name: "Claude Opus 5"
+        role_hint: null  # candidate for "strong"/"frontier" role depending on which pair is piloted; not assigned yet
+        max_output_tokens: 4096
+        thinking:
+          type: adaptive
+          display: omitted
+        effort: high
+        temperature: null
+        top_p: null
+        stop_sequences: []
+        inference_geo: null
+
+      - id: claude-haiku-4-5
+        display_name: "Claude Haiku 4.5"
+        role_hint: candidate_cheap  # provisional label only, not a frozen pair choice
+        max_output_tokens: 4096
+        thinking: null
+        effort: null
+        temperature: null
+        top_p: null
+        stop_sequences: []
+        inference_geo: null
+
+  openai:
+    adapter: router.models.openai_adapter.OpenAIModelClient
+    models:
+      - id: gpt-5.6-luna
+        display_name: "GPT-5.6 Luna"
+        role_hint: null  # cross-provider candidate, not assigned to a pair
+        max_output_tokens: 4096
+        thinking: null  # Anthropic-shaped field, unused by this adapter
+        effort: null    # cheapest tier of this generation -- no reasoning effort configured
+        temperature: null
+        top_p: null
+        stop_sequences: []
+        inference_geo: null
+
+      - id: gpt-5.6-sol
+        display_name: "GPT-5.6 Sol"
+        role_hint: null  # cross-provider candidate, not assigned to a pair
+        max_output_tokens: 4096
+        thinking: null
+        effort: high  # maps to reasoning={"effort": "high"} in the Responses API
+        temperature: null
+        top_p: null
+        stop_sequences: []
+        inference_geo: null
+
+  google:
+    adapter: router.models.google_gemini_adapter.GoogleGeminiModelClient
+    models:
+      - id: gemini-2.5-flash-lite
+        display_name: "Gemini 2.5 Flash-Lite"
+        role_hint: null  # cross-provider candidate, not assigned to a pair
+        max_output_tokens: 4096
+        thinking: null
+        effort: null  # cheapest tier -- no thinking_level configured
+        temperature: null
+        top_p: null
+        stop_sequences: []
+        inference_geo: null
+
+      - id: gemini-3.1-pro-preview
+        display_name: "Gemini 3.1 Pro (Preview)"
+        role_hint: null  # cross-provider candidate, not assigned to a pair
+        max_output_tokens: 4096
+        thinking: null
+        effort: high  # maps to generation_config.thinking_level="high" (5-level effort clamped to Gemini's 3)
+        temperature: null
+        top_p: null
+        stop_sequences: []
+        inference_geo: null
+
+# Defaults applied to a model entry when a field above is left unset (null).
+generation_defaults:
+  max_output_tokens: 1024
+  temperature: null
+  top_p: null
+  top_k: null
+  stop_sequences: []
